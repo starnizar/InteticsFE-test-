@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            transition: .3s;
+            outline: none;
+            border: none;
+        }
+        .app{
+            width: fit-content;
+            margin: 100px auto 0;
+            padding: 10px;
+            box-shadow: 0 0 10px black;
+            border-radius: 10px;
+            min-width: 210px;
+            min-height: 280px;
+        }
+        
+        .showData{
+            margin: 20px; 
+            display: flex; 
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form > *{
+            margin-top: 10px;
+        }
+        input{
+            border-radius: 5px;
+            box-shadow: 0 0 4px black;
+            padding: 3px;
+        }
+        button{
+            padding: 5px;border-radius: 5px;
+        }
+        button:hover{
+            box-shadow: 0 3px 5px black;
+            transform: scale(1.05);
+        }
+        button:active{
+            box-shadow: 0 1px 2px black;
+            transform: scale(1.02);
+        }
+        .result{
+            word-wrap: normal;
+            padding: 10px;
+            max-width: 300px;
+            max-height: 100px;
+            overflow: scroll;
+            font-weight: 600;
+        }
+        .result::-webkit-scrollbar{
+            width: 0;
+            height: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <form>
+            <input style="text-transform: uppercase;" placeholder="string of size N^2" class="param1" type="text">
+            <input style="text-transform: uppercase;" placeholder="word" class="param2" type="text">
+            <button>Result</button>
+        </form>
+        
+        <div class="showData">
+            <div style="box-shadow: 0 0 8px grey; padding: 10px; margin-right: 10px;" class="matrix"></div>
+            <div style="font-size: xx-large;     text-shadow: 4px 3px 3px grey;" class="string"></div>
+        </div>
+        <div style="background-color:black; color: chartreuse;" class="result"></div>
+    </div>
+    <script>
+        const input1 = document.querySelector('.param1')
+        const input2 = document.querySelector('.param2')
+        const form = document.querySelector('form')
+        const matrixBox = document.querySelector('.matrix')
+        const stringBox = document.querySelector('.string')
+        const resultBox = document.querySelector('.result')
+        
+        form.addEventListener( 'submit', (event) => {
+            event.preventDefault()
+            matrixBox.innerHTML = ''
+            const param1 = input1.value.toUpperCase()
+            const param2 = input2.value.toUpperCase()
+            script(param1, param2)
+        })
+        
+        const script = (param1, param2) => {
+            // param1 = 'QLGNAEKIRLRNGEAE'
+            // param2 = 'KING'
+            if( !isNaN(param1) || param1===undefined || (Math.sqrt(param1.length)^0)!==Math.sqrt(param1.length)){
+                return alert('Wrong value of "string"')
+            }else if(!isNaN(param2) || param2===undefined){
+                return alert('Wrong value of "word"')       
+            }
+            const size = Math.sqrt(param1.length)
+            const matrix = [] 
+            const result = []
+            let row = []
+            let cell= []
+        
+            for(let i=0; i <= param1.length; i++){
+                if(row.length !== size){
+                    row.push(param1[i])
+                } else {
+                    matrix.push(row)
+                    row=[]
+                    row.push(param1[i])
+                }
+            }
+            matrix.map(item => {
+                const showRow = document.createElement('p')
+                showRow.innerHTML = `${item}`;
+                matrixBox.appendChild(showRow)
+            })
+            stringBox.innerHTML = param2
+        
+            for(let i=0; i < param2.length; i++){
+                for(let j=0; j < size; j++){
+                    const check = matrix[j].indexOf(param2[i])
+                    if(check !== -1){
+                        cell.push(j)
+                        cell.push(check)
+                        result.push(cell)
+                        cell=[]
+                        break
+                    }
+                }
+            }
+            result.map((item, index) => {
+                const span = document.createElement('span')
+                if(index !== result.length-1){
+                    span.innerHTML = `[${item}]=>`
+                    resultBox.appendChild(span)
+                } else {
+                    span.innerHTML = `[${item}]<br>`
+                    resultBox.appendChild(span)
+                }
+            })
+        }
+    </script>
+</body>
+</html>
